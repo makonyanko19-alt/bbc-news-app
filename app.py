@@ -1,4 +1,4 @@
-import streamlit as st # 【追加】Webアプリ化の魔法
+import streamlit as st
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -87,9 +87,19 @@ if st.button("ニュースを取得する"):
     # データフレーム作成
     df = pd.DataFrame(news_list)
 
-    # 画面にドーン！と表を表示 (インタラクティブな表)
+    # 画面にドーン！と表を表示 (ここを修正しました！)
     st.success(f"{len(df)}件のニュースを取得しました！")
-    st.dataframe(df)
+    
+    st.dataframe(
+        df,
+        column_config={
+            "URL": st.column_config.LinkColumn(
+                "記事リンク",           # 列の名前
+                display_text="Link"    # URLの代わりに表示する文字（これがないと長いURLが表示されます）
+            )
+        },
+        hide_index=True # 左端の 0, 1, 2... という数字を隠してスッキリさせる
+    )
 
     # ダウンロードボタンを設置 (CSV保存機能)
     csv = df.to_csv(index=False, encoding='utf-8-sig').encode('utf-8-sig')
